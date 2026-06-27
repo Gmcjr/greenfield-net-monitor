@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server/",
     "start:dev": "nodemon server/",
-    "build": "webpack"
+    "build": "webpack",
+    "prepare": "husky"
   },
   "husky": {
     "hooks": {
@@ -14,7 +15,9 @@
     }
   },
   "lint-staged": {
-    "*": ["eslint"]
+    "*": [
+      "eslint"
+    ]
   },
   "repository": {
     "type": "git",
