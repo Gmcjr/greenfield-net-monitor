@@ -30,9 +30,15 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   console.info('a user connected');
+  socket.join('monitor1');
+
   socket.on('disconnect', () => {
     console.info('user disconnected');
   });
+
+  setInterval(() => {
+    socket.to('monitor1').emit('ping');
+  }, 5000);
 });
 
 server.listen(port, () => {

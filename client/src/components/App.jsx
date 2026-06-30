@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 
 const App = () => {
   const login = () => {
-    axios.get('/login');
+    axios.get('/oauth2/login');
   };
 
   const socket = io();
@@ -12,8 +12,12 @@ const App = () => {
     console.error(err);
   });
 
+  socket.on('ping', () => {
+    console.info('ping recieved');
+  });
+
   return (
-    <button type="button" onClick={login}> click me </button>
+    <button type="button" onClick={login}> login </button>
   );
 };
 
