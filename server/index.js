@@ -1,11 +1,14 @@
 const express = require('express');
 const path = require('path');
-const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
-const router = require('./routes/auth');
+const { createServer } = require('node:http');
+const { Server } = require('socket.io');
+const router = require('./routes/router');
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
 const port = 3000;
 
 app.use(express.static(path.join('client', 'dist')));
@@ -19,17 +22,26 @@ app.use(session({
 app.use(passport.initialize());
 // need to add, other session is making session
 app.use(passport.session());
-app.use('/oauth2', router);
+app.use('/oauth2', router.auth);
 
-mongoose.connect('mongodb://127.0.0.1:27017/greenfield')
-  .then(() => {
-    console.info('Successfully connected to DB');
-  })
-  .catch((err) => {
-    console.error('Failed to connect to DB', err);
+app.get('/', (req, res) => {
+  res.sendFile('../client/src/index.html');
+});
+
+io.on('connection', (socket) => {
+  console.info('a user connected');
+  socket.join('monitor1');
+
+  socket.on('disconnect', () => {
+    console.info('user disconnected');
   });
 
-app.listen(port, () => {
+  setInterval(() => {
+    socket.to('monitor1').emit('ping');
+  }, 5000);
+});
+
+server.listen(port, () => {
   console.info(`
     App listening on:
     - http://localhost:${port}
