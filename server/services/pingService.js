@@ -3,6 +3,7 @@ const Pings = require('../db/schemas/pings');
 
 const pingUrl = (monitor, io) => {
   const start = Date.now();
+  console.info(`Pinging ${monitor.url}`);
   axios.get(monitor.url)
     .then((res) => {
       const responseTime = Date.now() - start;
@@ -27,7 +28,7 @@ const pingUrl = (monitor, io) => {
         monitorId: monitor._id,
         status: 'down',
         responseTime,
-        statusCode: err.response.status,
+        statusCode: err.status,
         error: err.message,
       });
 
