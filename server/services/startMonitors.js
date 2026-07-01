@@ -9,7 +9,7 @@ const scheduleMonitor = (monitor, io) => {
 };
 
 const startMonitoring = (io) => {
-  Monitors.find({ userId: '6a43f6243d209fa3bb406c43' })
+  Monitors.find()
     .then((activeMonitors) => {
       activeMonitors.forEach((monitor) => {
         scheduleMonitor(monitor, io);
